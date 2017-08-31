@@ -1,0 +1,34 @@
+{
+  "name": "game-2048",
+  "version": "0.0.4",
+  "description": "game 2048",
+  "main": "app.js",
+  "scripts": {
+    "test": " ",
+    "build": "npm install && webpack -p",
+    "start": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergiy-mykhailov/game-2048.git"
+  },
+  "keywords": [
+    "game",
+    "2048",
+    "2048 puzzle",
+    "game 2048 puzzle",
+    "2048-puzzle"
+  ],
+  "author": "Sergiy Mykhailov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sergiy-mykhailov/game-2048/issues"
+  },
+  "homepage": "https://github.com/sergiy-mykhailov/game-2048#readme",
+  "dependencies": {
+    "jquery": "^2.1.4"
+  },
+  "devDependencies": {
+    "webpack": "^3.4.1"
+  }
+}
