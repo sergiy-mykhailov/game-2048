@@ -1,14 +1,13 @@
 
 import React from 'react';
 
+import GameControls from './GameControls.jsx';
 import GameField from './GameField.jsx';
 import ModalDialog from './ModalDialog.jsx';
 
-import {Card, CardActions, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
+import { Card, CardMedia, CardText } from 'material-ui/Card';
 import Toggle from 'material-ui/Toggle';
 import Divider from 'material-ui/Divider';
-import Chip from 'material-ui/Chip';
 
 class Game2048 extends React.Component {
     constructor(props) {
@@ -23,9 +22,7 @@ class Game2048 extends React.Component {
             isVictory:      false,
             isLoss:         false,
             infoExpanded:   false,
-            score:          0,
-            bestScore:      0,
-            bestTile:       0
+            score:          0
         };
     }
 
@@ -40,7 +37,6 @@ class Game2048 extends React.Component {
 
         this.pushToQueue(gameArray, 'init');
         this.showView();
-        this.getResults();
     }
 
     componentDidMount() {
@@ -567,20 +563,6 @@ class Game2048 extends React.Component {
         });
     };
 
-    getResults = () => {
-
-        let saves = JSON.parse(localStorage.getItem('game-2048'));
-        if (!saves) {
-            saves = this.getEmptySaves();
-            localStorage.setItem('game-2048', JSON.stringify(saves));
-        }
-
-        this.setState({
-            bestScore:  saves.bestScore,
-            bestTile:   saves.bestTile,
-        });
-    };
-
     saveResults = () => {
 
         let saves = this.getEmptySaves();
@@ -629,7 +611,6 @@ class Game2048 extends React.Component {
 
         this.generateTile(true);
         this.showView();
-        this.getResults();
     };
 
     handleTransitionEnd = (event) => {
@@ -658,28 +639,6 @@ class Game2048 extends React.Component {
 
     //-------- render --------
 
-    renderTitle = () => {
-        const style = {
-            float: 'right'
-        };
-        return (
-            <span>
-                Game 2048
-                <Chip style={style} >
-                    Score: {this.state.score}
-                </Chip>
-            </span>
-        );
-    };
-
-    renderSubtitle = () => {
-        return (
-            <span>
-                Best game: (Score: {this.state.bestScore} Tile: {this.state.bestTile})
-            </span>
-        );
-    };
-
     render() {
         const styleGame2048 = {
             width: '30%',
@@ -690,16 +649,13 @@ class Game2048 extends React.Component {
                 <Card expanded={this.state.infoExpanded}
                       onExpandChange={this.handleExpandChange}>
 
-                    <CardTitle
-                        title={this.renderTitle()}
-                        subtitle={this.renderSubtitle()}
+                    <GameControls
+                        handleStart={this.handleStart}
+                        score={this.state.score}
                     />
 
-                    <CardActions>
-                        <RaisedButton label="New Game" onClick={this.handleStart}/>
-                    </CardActions>
-
                     <Divider />
+
                     <CardMedia >
                         <GameField
                             view={this.state.view}
@@ -707,6 +663,7 @@ class Game2048 extends React.Component {
                             onTransitionEnd={this.handleTransitionEnd}
                         />
                     </CardMedia>
+
                     <Divider />
 
                     <CardText>
