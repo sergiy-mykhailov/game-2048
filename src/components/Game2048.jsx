@@ -9,6 +9,8 @@ import { Card, CardMedia, CardText } from 'material-ui/Card';
 import Toggle from 'material-ui/Toggle';
 import Divider from 'material-ui/Divider';
 
+import './Game2048.css';
+
 class Game2048 extends React.Component {
     constructor(props) {
         super(props);
@@ -640,12 +642,8 @@ class Game2048 extends React.Component {
     //-------- render --------
 
     render() {
-        const styleGame2048 = {
-            width: '30%',
-            margin: 'auto'
-        };
         return (
-            <div style={styleGame2048} >
+            <div className="game-2048">
                 <Card expanded={this.state.infoExpanded}
                       onExpandChange={this.handleExpandChange}>
 

@@ -23,11 +23,11 @@ class GameControls extends React.Component {
     getResults = () => {
 
         let saves = JSON.parse(localStorage.getItem('game-2048'));
-        if (!saves) {
+        if (saves) {
+            this.setState({ bestScore: saves.bestScore, bestTile: saves.bestTile, });
+        } else {
             this.setState({ bestScore:  0, bestTile:  0, });
         }
-
-        this.setState({ bestScore: saves.bestScore, bestTile: saves.bestTile, });
     };
 
     handleStart = () => {
