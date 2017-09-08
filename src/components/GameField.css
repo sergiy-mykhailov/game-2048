@@ -1,0 +1,23 @@
+
+.game-field {
+    padding: .25rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.field-container {
+    position: relative;
+    height: 0;
+    padding-top: 100%;
+    box-sizing: inherit;
+}
+
+.field-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-sizing: inherit;
+}
+

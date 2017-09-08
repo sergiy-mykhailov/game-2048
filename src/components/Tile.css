@@ -1,0 +1,48 @@
+
+.tile-container {
+    position: absolute;
+    width: 25%;
+    padding: 2%;
+    box-sizing: inherit;
+}
+
+.tile-inner {
+    position: relative;
+    height: 0;
+    padding-top: 100%;
+    box-sizing: inherit;
+}
+
+.tile-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-sizing: inherit;
+}
+
+.tile {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    text-align: center;
+    font-family: "Showcard-Gothic", sans-serif !important;
+}
+
+.tile-caption {
+    margin: auto;
+}
+
+/* fonts */
+@font-face {
+    font-family: Showcard-Gothic;
+    src: url('../fonts/Showcard_Gothic.eot');
+    src:
+        local('Showcard Gothic'),
+        url('../fonts/Showcard_Gothic.eot') format('embedded-opentype'),
+        url('../fonts/Showcard_Gothic.woff2') format('woff2'),
+        url('../fonts/Showcard_Gothic.woff') format('woff'),
+        url('../fonts/Showcard_Gothic.ttf') format('truetype');
+
+}

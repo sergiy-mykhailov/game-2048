@@ -15,7 +15,7 @@ to create a tile with the number 2048.
   
 Add mount point:
 ```
-<div class="game-2048"></div>
+<div id="game-2048"></div>
 ```
   
 Add script into your page:
