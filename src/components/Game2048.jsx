@@ -42,7 +42,9 @@ class Game2048 extends React.Component {
     }
 
     componentDidMount() {
+
         document.onkeyup = this.handleKeystroke;
+
     }
 
     componentWillUnmount() {
@@ -591,8 +593,9 @@ class Game2048 extends React.Component {
 
         this.setState({ queue: [] });
 
-        const key = event.keyCode || event.code;
+        const key = event.key || event.keyCode || event.which;
         const direction = this.getDirection(key);
+        if (!direction) return;
 
         this.shiftTiles(direction);
         this.mergeTiles(direction);
@@ -644,8 +647,10 @@ class Game2048 extends React.Component {
     render() {
         return (
             <div className="game-2048">
-                <Card expanded={this.state.infoExpanded}
-                      onExpandChange={this.handleExpandChange}>
+                <Card
+                    expanded={this.state.infoExpanded}
+                    onExpandChange={this.handleExpandChange}
+                >
 
                     <GameControls
                         handleStart={this.handleStart}
