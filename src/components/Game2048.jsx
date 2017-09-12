@@ -210,7 +210,7 @@ class Game2048 extends React.Component {
                     arr[i] = 0;
 
                     shiftAllowed = true;
-                    target.push(i);
+                    target.push(i-1);
                     break;
                 }
             }
@@ -307,6 +307,17 @@ class Game2048 extends React.Component {
     };
 
     //-------- main functions --------
+
+    startSliding = (direction) => {
+        if (!direction || (this.state.queue.length !== 0) || (!this.state.isStarted)) return;
+
+        this.setState({ queue: [] });
+
+        this.shiftTiles(direction);
+        this.mergeTiles(direction);
+        this.generateTile();
+        this.showView();
+    };
 
     shiftTiles  = (direction) => {
         let arr = this.cloneArray(this.state.gameArray);
@@ -589,18 +600,11 @@ class Game2048 extends React.Component {
     //-------- handlers --------
 
     handleKeystroke = (event) => {
-        if ((this.state.queue.length !== 0) || (!this.state.isStarted)) return;
 
-        this.setState({ queue: [] });
-
-        const key = event.key || event.keyCode || event.which;
+        const key = event.keyCode || event.key || event.which;
         const direction = this.getDirection(key);
-        if (!direction) return;
 
-        this.shiftTiles(direction);
-        this.mergeTiles(direction);
-        this.generateTile();
-        this.showView();
+        this.startSliding(direction);
     };
 
     handleStart = () => {
@@ -664,6 +668,7 @@ class Game2048 extends React.Component {
                             view={this.state.view}
                             matrixSize={this.state.matrixSize}
                             onTransitionEnd={this.handleTransitionEnd}
+                            onSlide={this.startSliding}
                         />
                     </CardMedia>
 

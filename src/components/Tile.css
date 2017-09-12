@@ -34,6 +34,40 @@
     margin: auto;
 }
 
+/* media */
+@media screen and (max-width: 575px) {
+    .number-0  {  font-size: 2vw;  }
+    .number-sm {  font-size: 6vw;  }
+    .number-md {  font-size: 8vw;  }
+    .number-lg {  font-size: 10vw;  }
+    .number-xl {  font-size: 12vw;  }
+}
+@media screen and (min-width: 576px) {
+    .number-sm {  font-size: 4vw;  }
+    .number-md {  font-size: 5vw;  }
+    .number-lg {  font-size: 6vw;  }
+    .number-xl {  font-size: 7vw;  }
+}
+@media screen and (min-width: 768px) {
+    .number-0  {  font-size: 1vw;  }
+    .number-sm {  font-size: 3.5vw;  }
+    .number-md {  font-size: 4vw;  }
+    .number-lg {  font-size: 4.5vw;  }
+    .number-xl {  font-size: 5vw;  }
+}
+@media screen and (min-width: 992px) {
+    .number-sm {  font-size: 2.5vw;  }
+    .number-md {  font-size: 3vw;  }
+    .number-lg {  font-size: 3.5vw;  }
+    .number-xl {  font-size: 4vw;  }
+}
+@media screen and (min-width: 1200px) {
+    .number-sm {  font-size: 2vw;  }
+    .number-md {  font-size: 2.5vw;  }
+    .number-lg {  font-size: 3vw;  }
+    .number-xl {  font-size: 3.5vw;  }
+}
+
 /* fonts */
 @font-face {
     font-family: Showcard-Gothic;
@@ -44,5 +78,4 @@
         url('../fonts/Showcard_Gothic.woff2') format('woff2'),
         url('../fonts/Showcard_Gothic.woff') format('woff'),
         url('../fonts/Showcard_Gothic.ttf') format('truetype');
-
 }

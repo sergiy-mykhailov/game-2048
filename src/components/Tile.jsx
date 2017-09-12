@@ -56,29 +56,26 @@ class Tile extends React.Component {
         return value;
     };
 
-    getFontSize = () => {
+    getClassName = () => {
         let value;
 
         switch (this.props.value) {
-
-            case 0:     value = "1vw";      break;
-
             case 2:
             case 4:
-            case 8:     value = "3.5vw";    break;
+            case 8:     value = "number-xl"; break;
 
             case 16:
             case 32:
-            case 64:    value = "3vw";      break;
+            case 64:    value = "number-lg"; break;
 
             case 128:
             case 256:
-            case 512:   value = "2.5vw";    break;
+            case 512:   value = "number-md"; break;
 
             case 1024:
-            case 2048:  value = "2vw";      break;
+            case 2048:  value = "number-sm"; break;
 
-            default:    value = "1vw";      break;
+            default:    value = "number-0"; break;
         }
         return value;
     };
@@ -92,17 +89,15 @@ class Tile extends React.Component {
     };
 
     renderChild = () => {
+        const style = {};
 
-        const style = {
-            fontSize: this.getFontSize()
-        };
         if (this.props.animation.toLowerCase() === "new") {
             style.transitionProperty = 'font-size';
             style.transitionDuration = '200ms';
         }
 
         return (
-            <div className="tile-caption" style={style}>
+            <div className={"tile-caption " + this.getClassName()} style={style}>
                 {(this.props.value === 0) ? '' : this.props.value}
             </div>
         );
@@ -128,7 +123,6 @@ class Tile extends React.Component {
                 style.height             = '110%';
                 style.width              = '110%';
                 style.margin             = '-5%';
-
                 break;
 
             case "merge":
@@ -150,7 +144,6 @@ class Tile extends React.Component {
             top:    `${this.props.top}%`,
         };
         return (
-
             <div className="tile-container" style={styleContainer}>
                 <div className="tile-inner">
                     <div className="tile-content">

@@ -3,35 +3,26 @@
     margin: auto;
 }
 
-/*// Extra small devices (portrait phones, less than 576px)*/
 @media screen and (max-width: 575px) {
     .game-2048 {
         width: 100%;
     }
 }
-
-/*// Small devices (landscape phones, less than 768px)*/
 @media screen and (min-width: 576px) {
     .game-2048 {
         width: 60%;
     }
 }
-
-/*// Medium devices (tablets, less than 992px)*/
 @media screen and (min-width: 768px) {
     .game-2048 {
         width: 50%;
     }
 }
-
-/*// Large devices (desktops, less than 1200px)*/
 @media screen and (min-width: 992px) {
     .game-2048 {
         width: 40%;
     }
 }
-
-/*// Extra large devices (large desktops, 1200px and up)*/
 @media screen and (min-width: 1200px) {
     .game-2048 {
         width: 30%;
