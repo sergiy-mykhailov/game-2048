@@ -1,5 +1,10 @@
 # Game "2048" 
 
+**2048**- simple game in JavaScript using
+React.JS and Material-UI.
+
+## About game
+
 **2048** is a single-player sliding block puzzle
 game by Italian web developer Gabriele Cirulli. The game's
 objective is to slide numbered tiles on a grid to combine them

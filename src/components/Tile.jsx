@@ -7,20 +7,6 @@ import Paper from 'material-ui/Paper';
 import './Tile.css';
 
 class Tile extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isAnimated: false
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-        if (nextProps.animation) {
-            this.setState({ isAnimated: true });
-        }
-    }
 
     getBGColor = () => {
         let value;
@@ -80,14 +66,6 @@ class Tile extends React.Component {
         return value;
     };
 
-    onTransitionEnd = (event) => {
-
-        if (this.state.isAnimated) {
-            this.props.onTransitionEnd(event);
-            this.setState({ isAnimated: false });
-        }
-    };
-
     renderChild = () => {
         const style = {};
 
@@ -112,14 +90,9 @@ class Tile extends React.Component {
 
         switch ( this.props.animation.toLowerCase() ) {
 
-            case "shift":
-                style.transitionProperty = 'background-color';
-                style.transitionDuration = '10ms';
-                break;
-
             case "merge-flash":
                 style.transitionProperty = 'width, height, margin';
-                style.transitionDuration = '40ms';
+                style.transitionDuration = '20ms';
                 style.height             = '110%';
                 style.width              = '110%';
                 style.margin             = '-5%';
@@ -127,7 +100,7 @@ class Tile extends React.Component {
 
             case "merge":
                 style.transitionProperty = 'width, height, margin';
-                style.transitionDuration = '40ms';
+                style.transitionDuration = '200ms';
                 break;
 
             case "new":
@@ -154,7 +127,6 @@ class Tile extends React.Component {
                             style={this.getStyleTile()}
                             zDepth={1}
                             children={this.renderChild()}
-                            onTransitionEnd={this.onTransitionEnd}
                         />
 
                     </div>
@@ -168,7 +140,6 @@ Tile.propTypes = {
     value:              PropTypes.number.isRequired,
     left:               PropTypes.number.isRequired,
     top:                PropTypes.number.isRequired,
-    onTransitionEnd:    PropTypes.func.isRequired,
     animation:          PropTypes.string.isRequired
 };
 

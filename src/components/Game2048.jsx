@@ -33,22 +33,30 @@ class Game2048 extends React.Component {
     componentWillMount() {
 
         const gameArray = this.getNewGameArray();
-        this.setState({
-            gameArray: gameArray
-        });
+        this.setState({ gameArray });
 
         this.pushToQueue(gameArray, 'init');
         this.showView();
     }
 
     componentDidMount() {
-
         document.onkeyup = this.handleKeystroke;
-
     }
 
     componentWillUnmount() {
         this.saveResults();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+
+        return !(
+            this.props === nextProps
+            && (this.state.isLoss === nextState.isLoss)
+            && (this.state.isVictory === nextState.isVictory)
+            && (this.state.view === nextState.view)
+            && (this.state.matrixSize === nextState.matrixSize)
+            && (this.state.infoExpanded === nextState.infoExpanded)
+        );
     }
 
     //-------- secondary functions --------
@@ -101,17 +109,10 @@ class Game2048 extends React.Component {
 
     cloneArray = (arr) => {
 
-        if (Array.isArray(arr)) {
-            let clone = [];
-
-            arr.forEach( (item) => {
-                clone.push(this.cloneArray(item));
-            });
-
-            return clone;
-        } else {
-            return arr;
-        }
+        return arr.map( (item) => {
+            if (Array.isArray(item)) return item.concat();
+            return item;
+        });
     };
 
     rotate = (arr, direction, forward) => {
@@ -198,25 +199,15 @@ class Game2048 extends React.Component {
     };
 
     shiftArray = (arr) => {
-        let shiftAllowed = false;
-        let target = [];
+        if( !this.isShiftAllowed(arr) ) return;
 
-        if( this.isShiftAllowed(arr) ) {
-
-            for(let i = 1; i < arr.length; i++) {
-                if ((arr[i] !== 0)  && (arr[i-1] === 0 )) {
-
-                    arr[i - 1] = arr[i];
-                    arr[i] = 0;
-
-                    shiftAllowed = true;
-                    target.push(i-1);
-                    break;
-                }
+        for(let i = 0; i < arr.length; i++) {
+            if(arr[i] === 0){
+                arr.splice(i,1);
+                arr.push(0);
+                break;
             }
         }
-
-        return { isShifted: shiftAllowed, target: target };
     };
 
     isShiftAllowed = (arr) => {
@@ -237,7 +228,6 @@ class Game2048 extends React.Component {
             for(let i = 0; i < arr.length; i++) {
 
                 if ( (i + 1 < arr.length) && (arr[i] !== 0) ) {
-
                     if(arr[i] === arr[i+1]){
 
                         arr.splice(i, 2, arr[i]*2);
@@ -311,8 +301,6 @@ class Game2048 extends React.Component {
     startSliding = (direction) => {
         if (!direction || (this.state.queue.length !== 0) || (!this.state.isStarted)) return;
 
-        this.setState({ queue: [] });
-
         this.shiftTiles(direction);
         this.mergeTiles(direction);
         this.generateTile();
@@ -323,56 +311,49 @@ class Game2048 extends React.Component {
         let arr = this.cloneArray(this.state.gameArray);
 
         for (let i = 0; i < arr.length; i++) {
-            for (let j = 0; j < arr[i].length; j++) {
 
-                let turnedArray     = this.rotate(arr, direction, true);
-                const shiftProps    = this.shiftArray(turnedArray[i]);
+            let turnedArray = this.rotate(arr, direction, true);
 
-                if (shiftProps.isShifted) {
-                    const newArr = this.rotate(turnedArray, direction, false);
+            for (let j = 0; j < turnedArray.length; j++) {
+                this.shiftArray(turnedArray[j]);
+            }
 
-                    if(arr.join(',') !== newArr.join(',')){
+            const newArr = this.rotate(turnedArray, direction, false);
 
-                        const targets = this.getTargets(shiftProps.target, direction, i);
-                        this.pushToQueue(newArr, 'shift', targets);
-                        arr = newArr;
-                    }
-                }
+            if(arr.join(',') !== newArr.join(',')){
+                this.pushToQueue(newArr, 'shift');
+                arr = newArr;
             }
         }
 
-        this.setState({
-            gameArray: arr
-        });
+        this.setState({ gameArray: arr });
     };
 
     mergeTiles  = (direction) => {
         let arr = this.cloneArray(this.state.gameArray);
 
-        for (let i = 0; i < arr.length; i++) {
+        let turnedArray = this.rotate(arr, direction, true);
+        let targets     = [];
 
-            let turnedArray     = this.rotate(arr, direction, true);
-            const mergeProps    = this.mergeArray(turnedArray[i], i);
+        for (let i = 0; i < turnedArray.length; i++) {
+
+            const mergeProps = this.mergeArray(turnedArray[i], i);
 
             if (mergeProps.isMerged) {
-                const newArr = this.rotate(turnedArray, direction, false);
-
-                if (arr.join(',') !== newArr.join(',')) {
-
-                    const targets = this.getTargets(mergeProps.target, direction, i);
-                    this.pushToQueue(newArr, 'merge', targets);
-                    arr = newArr;
-                }
+                const mergedItems = this.getTargets(mergeProps.target, direction, i);
+                targets.push(...mergedItems);
             }
         }
 
-        this.setState({
-            gameArray: arr
-        });
+        const newArr = this.rotate(turnedArray, direction, false);
+
+        if (arr.join(',') !== newArr.join(',')) {
+            this.pushToQueue(newArr, 'merge', targets);
+            this.setState({ gameArray: newArr });
+        }
     };
 
     generateTile  = (newGame = false) => {
-
         if ( !newGame && (this.state.queue.length === 0) ) return;
 
         let arr  = (newGame) ? this.getNewGameArray()
@@ -390,7 +371,6 @@ class Game2048 extends React.Component {
 
             return arrTmp;
         });
-
         if (arrI.length === 0) return;
 
         const randomI   = this.randomInRange(0, arrI.length-1);
@@ -401,51 +381,43 @@ class Game2048 extends React.Component {
         arr[indexI][indexJ] = 2;
 
         this.pushToQueue(arr, 'new', [{ i: indexI, j: indexJ }]);
-
-        this.setState({
-            gameArray: arr
-        });
+        this.setState({ gameArray: arr });
     };
 
     pushToQueue = (arr, type = '', targets = []) => {
         let queue = this.state.queue;
+        let view;
 
         switch (type.toLowerCase()) {
 
             case "new":
-            case "shift":
+                view = this.getView(arr);
                 targets.forEach( (item) => {
-
-                    let view = this.getView(arr);
                     view[item.i][item.j].animation = type.toLowerCase();
-                    queue.push(view);
-
                 });
+                queue.push(view);
                 break;
 
             case "merge":
+                let flashView   = this.getView(arr);
+                view            = this.getView(arr);
+
                 targets.forEach( (item) => {
-
-                    let flashView = this.getView(arr);
                     flashView[item.i][item.j].animation = 'merge-flash';
-                    queue.push(flashView);
-
-                    let view = this.getView(arr);
-                    view[item.i][item.j].animation = 'merge';
-                    queue.push(view);
-
+                    view[item.i][item.j].animation      = 'merge';
                 });
+
+                queue.push(flashView);
+                queue.push(view);
                 break;
 
             default:
-                let view = this.getView(arr);
+                view = this.getView(arr);
                 queue.push(view);
                 break;
         }
 
-        this.setState({
-            queue: queue
-        });
+        this.setState({ queue });
     };
 
     getView = (gameArray) => {
@@ -466,9 +438,14 @@ class Game2048 extends React.Component {
         let queue   = this.state.queue;
         const view  = queue.shift();
 
-        this.setState({
-            queue:  queue,
-            view:   view
+        this.setState({ queue, view }, () => {
+
+            if (this.state.queue.length === 0) {
+                this.checkForVictory();
+            } else {
+                setTimeout(() => { this.showView() }, 20);
+            }
+
         });
     };
 
@@ -573,9 +550,7 @@ class Game2048 extends React.Component {
         let score = this.state.score;
         score += value;
 
-        this.setState({
-            score:  score
-        });
+        this.setState({ score });
     };
 
     saveResults = () => {
@@ -622,15 +597,6 @@ class Game2048 extends React.Component {
         this.showView();
     };
 
-    handleTransitionEnd = (event) => {
-        if (event.target.classList.contains("tile")) {
-
-            this.showView();
-
-            if (this.state.queue.length === 0) this.checkForVictory();
-        }
-    };
-
     handleModalClose = () => {
         this.setState({
             isVictory:  false,
@@ -667,7 +633,6 @@ class Game2048 extends React.Component {
                         <GameField
                             view={this.state.view}
                             matrixSize={this.state.matrixSize}
-                            onTransitionEnd={this.handleTransitionEnd}
                             onSlide={this.startSliding}
                         />
                     </CardMedia>

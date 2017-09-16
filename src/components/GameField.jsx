@@ -27,6 +27,16 @@ class GameField extends React.Component {
         gameField.addEventListener('touchcancel',    this.handleTouchEnd);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+
+        return !(
+            this.state === nextState
+            && (this.props.matrixSize === nextProps.matrixSize)
+            && (this.props.view === nextProps.view)
+            && (this.props.onSlide === nextProps.onSlide)
+        );
+    }
+
     handleTouchStart = (event) => {
         if (!event.touches || event.touches.length !== 1 || this.state.touchStarted) return;
 
@@ -76,7 +86,6 @@ class GameField extends React.Component {
                                         left={j * this.state.tileSize}
                                         top={i * this.state.tileSize}
                                         animation={item.animation}
-                                        onTransitionEnd={this.props.onTransitionEnd}
                                     />
                                 );
                             });
@@ -92,7 +101,6 @@ class GameField extends React.Component {
 GameField.propTypes = {
     matrixSize:         PropTypes.number.isRequired,
     view:               PropTypes.array.isRequired,
-    onTransitionEnd:    PropTypes.func.isRequired,
     onSlide:            PropTypes.func.isRequired
 };
 
